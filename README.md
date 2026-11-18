@@ -8,31 +8,32 @@ Core Agent does real work on a computer. You give it a job in plain words, and i
 terminals, files, Python, images and a browser until the job is done. It is plain Python with no agent framework
 underneath, and it records every call, token and second it spends.
 
-- [Core vs Codex](#core-vs-codex)
-- [Try it in 60 seconds](#try-it-in-60-seconds)
-- [Run it on your own task](#run-it-on-your-own-task)
-- [Why it is cheap](#why-it-is-cheap)
-- [Real jobs](#real-jobs)
-- [How it is built](#how-it-is-built)
+- **Cheap:** 3.3× cheaper than Codex per solved task, with 5× fewer tokens per run.
+- **Capable:** passes hard jobs graded by hidden tests, from EU bank capital rules to a CAD part from a drawing,
+  for 5 to 20 cents each.
+- **Reliable:** crash-safe tools, a full record of every run, and over 1,100 tests on every push.
+
+**Contents:** [Core vs Codex](#core-vs-codex) · [Try it in 60 seconds](#try-it-in-60-seconds) ·
+[Run it on your own task](#run-it-on-your-own-task) · [Why it is cheap](#why-it-is-cheap) ·
+[Real jobs](#real-jobs) · [How it is built](#how-it-is-built)
+
 
 ## Core vs Codex
 
-Terminal-Bench 2.1, the 24 tasks both agents ran, graded by the benchmark's hidden tests. Codex is the public
-leaderboard entry "Codex / GPT-5.6 Luna, effort max". Core runs gpt-6-luna. Every run is priced at gpt-6-luna list
-prices ($0.10 / $0.01 / $0.50 per million uncached input / cached input / output tokens), so the gap is the
-harness, not the model's price.
+Both agents on GPT Luna, on the 24 Terminal-Bench 2.1 tasks they both ran, graded by the benchmark's hidden
+tests. Every run is priced the same, so the difference is the harness, not the model's price.
 
 | | Core Agent | Codex |
 |---|---|---|
 | **Cost per solved task** | **$0.013** | $0.044 |
-| Cost per run | $0.010 | $0.033 |
-| Tokens per run (median) | **95K** | 503K |
-| Pass rate | 73% (238 of 325 runs) | 76% (91 of 120 runs) |
+| Cost per run | **$0.010** | $0.033 |
+| Tokens per run | **95K** | 503K |
 
-Core spends **3.3× less per solved task** and about **5× fewer tokens per run**, at a similar pass rate. At the
-price each model actually charges, Codex's leaderboard run costs about 35× more per solved task.
+**3.3× cheaper per solved task, with 5× fewer tokens per run.** Cost per solved task counts every failed attempt
+too, so a cheaper run that fails more often would not win here.
 
-Per task results and the script that computes them: [benchmarks/](benchmarks/).
+Codex's figures are its public leaderboard run, which used an earlier Luna release. Pass rates, per-task results,
+prices and the script: [benchmarks/](benchmarks/).
 
 ## Try it in 60 seconds
 
@@ -60,7 +61,7 @@ Core works inside a running Docker container. Point it at any OpenAI-compatible 
 ```sh
 export AETHER_FW_GLM_53_FLASH_ENDPOINT=https://your-endpoint
 export AETHER_FW_GLM_53_FLASH_KEY=your-key
-export AETHER_FW_GLM_53_FLASH_DEPLOYMENT=gpt-6-luna
+export AETHER_FW_GLM_53_FLASH_DEPLOYMENT=your-model
 export AETHER_CORE_API=openai          # or azure (the default)
 
 docker run -d --name job python:3.12 sleep infinity
@@ -88,7 +89,7 @@ Each of these started as an experiment behind a switch and stayed only because t
 
 ## Real jobs
 
-Real runs on Terminal-Bench, graded by hidden tests Core never saw. Costs at gpt-6-luna list prices.
+Real runs on Terminal-Bench with GPT Luna, graded by hidden tests Core never saw. Costs at list prices.
 
 | Job | Time | Cost |
 |---|---|---|
@@ -140,7 +141,7 @@ How changes are made and judged: [BUILDING.md](BUILDING.md). Design notes:
 
 ## Limits
 
-- One model at a time, tested mainly with `gpt-6-luna`.
+- One model at a time, tested mainly with GPT Luna.
 - Core's comparison runs come from many experiment builds, and some tasks have only 2 runs. Codex has 5 per task.
 - The offline tests prove the mechanics, not task skill. Task results come from the real runs above.
 

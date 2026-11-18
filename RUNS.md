@@ -1,10 +1,10 @@
 # Real runs
 
-Each run below is one real Core run with `gpt-6-luna`, on a task graded afterwards by hidden tests the agent never
+Each run below is one real Core run with GPT Luna, on a task graded afterwards by hidden tests the agent never
 saw. All eight passed. The tasks come from Terminal-Bench 2.1 and 4, public sets of realistic computer tasks. Task
 wording is paraphrased here, because benchmark text is not republished.
 
-Time is from first request to finish. Cost is model usage priced at gpt-6-luna list prices, $0.10 / $0.01 / $0.50 per million uncached
+Time is from first request to finish. Cost is model usage at list prices, $0.10 / $0.01 / $0.50 per million uncached
 input / cached input / output tokens. Steps are model turns.
 
 These are chosen successful runs, not success rates. On the hardest tasks Core does not succeed on every attempt.
