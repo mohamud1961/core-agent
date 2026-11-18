@@ -1,6 +1,6 @@
 # Core Agent
 
-**A lean, cheap agent: over 3× cheaper than Codex.**
+**A lean, cheap agent: 26% cheaper than Codex on Terminal-Bench 2.1, on the same model.**
 
 [![CI](https://github.com/mohamud1961/core-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/mohamud1961/core-agent/actions/workflows/ci.yml)
 
@@ -8,7 +8,7 @@ Core Agent does real work on a computer. You give it a job in plain words, and i
 terminals, files, Python, images and a browser until the job is done. It is plain Python with no agent framework
 underneath, and it records every call, token and second it spends.
 
-- **Cheap:** 3.3× cheaper than Codex per solved task, with 5× fewer tokens per run.
+- **Cheap:** 26% cheaper than Codex on Terminal-Bench 2.1, same model, same passes.
 - **Capable:** passes hard jobs graded by hidden tests, from EU bank capital rules to a CAD part from a drawing,
   for 5 to 20 cents each.
 - **Reliable:** crash-safe tools, a full record of every run, and over 1,100 tests on every push.
@@ -20,20 +20,19 @@ underneath, and it records every call, token and second it spends.
 
 ## Core vs Codex
 
-Both agents on GPT Luna, on the 24 Terminal-Bench 2.1 tasks they both ran, graded by the benchmark's hidden
-tests. Every run is priced the same, so the difference is the harness, not the model's price.
+Core Agent and Codex, both on GPT Luna at max effort, run side by side on Terminal-Bench 2.1 and graded by the
+benchmark's hidden tests.
 
 | | Core Agent | Codex |
 |---|---|---|
-| **Cost per solved task** | **$0.013** | $0.044 |
-| Cost per run | **$0.010** | $0.033 |
-| Tokens per run | **95K** | 503K |
+| Tasks passed | **25/25** | 25/25 |
+| **Cost** | **$0.416** | $0.563 |
+| Median time per task | **167 s** | 185 s |
 
-**3.3× cheaper per solved task, with 5× fewer tokens per run.** Cost per solved task counts every failed attempt
-too, so a cheaper run that fails more often would not win here.
+**26% cheaper, with the same passes.** Core was cheaper on 19 of the 25 tasks and took fewer steps on most, for
+example 39 steps against Codex's 92 to build the CompCert C compiler.
 
-Codex's figures are its public leaderboard run, which used an earlier Luna release. Pass rates, per-task results,
-prices and the script: [benchmarks/](benchmarks/).
+Per-task results, setup and the script: [benchmarks/](benchmarks/).
 
 ## Try it in 60 seconds
 
@@ -78,7 +77,7 @@ plugs into [Harbor](https://github.com/laude-institute/harbor): install the `har
 - **Cache-stable context.** The start of every request stays identical, so the provider's cache serves most of
   it at a tenth of the price. This alone roughly halved cost per run.
 - **Small requests.** Core keeps the working context within a budget instead of replaying the whole history, so
-  a typical run reads 95K tokens where Codex reads 503K.
+  it needs fewer, smaller requests than Codex for the same job.
 - **State written once.** Facts about the run are written once instead of rewritten every turn. This cut cost per
   run to 0.52× and 0.76× on two task sets, with the same passes.
 - **Long commands keep running.** Up to eight named terminals keep slow jobs going in the background while the
@@ -142,7 +141,6 @@ How changes are made and judged: [BUILDING.md](BUILDING.md). Design notes:
 ## Limits
 
 - One model at a time, tested mainly with GPT Luna.
-- Core's comparison runs come from many experiment builds, and some tasks have only 2 runs. Codex has 5 per task.
 - The offline tests prove the mechanics, not task skill. Task results come from the real runs above.
 
 ## Built with
