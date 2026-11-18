@@ -2,7 +2,7 @@
 
 Core improves by small experiments. Each one answers a question, and the answer decides whether the change stays.
 Below is a selection, grouped by question. The full record, with every prediction and result, is in the
-[research](../research/) folder.
+[research](https://github.com/mohamud1961/Aether/tree/main/research) folder.
 
 ## Can we make runs cheaper without losing passes?
 

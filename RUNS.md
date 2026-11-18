@@ -4,8 +4,8 @@ Each run below is one real Core run with `gpt-6-luna`, on a task graded afterwar
 saw. All eight passed. The tasks come from Terminal-Bench 2.1 and 4, public sets of realistic computer tasks. Task
 wording is paraphrased here, because benchmark text is not republished.
 
-Time is from first request to finish. Cost is model usage priced at $0.25 / $0.025 / $0.90 per million input /
-cached / output tokens. Steps are model turns.
+Time is from first request to finish. Cost is model usage priced at gpt-6-luna list prices, $0.10 / $0.01 / $0.50 per million uncached
+input / cached input / output tokens. Steps are model turns.
 
 These are chosen successful runs, not success rates. On the hardest tasks Core does not succeed on every attempt.
 
@@ -28,7 +28,7 @@ standard period. Output: a results file and a workbook showing the calculation.
 5. Wrote the results CSV, and an Excel workbook with trade-level workings and formula-driven roll-ups.
 6. Reopened both files and checked their contents before finishing.
 
-**Result:** passed. 17m 15s, 33 steps, $0.18.
+**Result:** passed. 17m 15s, 33 steps, $0.085.
 
 ## Design file from a picture (Terminal-Bench 4)
 
@@ -40,7 +40,7 @@ Write it as a JSON layout config that a provided renderer turns back into the gr
 graphic, identified the text styling, wrote the config, rendered it, compared the render with the original pixel
 by pixel, and adjusted until they matched.
 
-**Result:** passed. The final render was pixel-identical to the original. 26m 42s, 63 steps, $0.19.
+**Result:** passed. The final render was pixel-identical to the original. 26m 42s, 63 steps, $0.085.
 
 ## 3D part from an engineering drawing (Terminal-Bench 4)
 
@@ -56,7 +56,7 @@ every labelled dimension, radius and angle.
 4. Exported a mesh and rendered it to check the shape visually.
 5. Removed its own scratch files and finished.
 
-**Result:** passed. 12m 34s, 30 steps, $0.11.
+**Result:** passed. 12m 34s, 30 steps, $0.051.
 
 ## Invoices from a folder of scans (Terminal-Bench 2.1)
 
@@ -70,7 +70,7 @@ folder, the rest into another, and write a summary of each invoice's total and V
 4. Wrote `summary.csv`, with totals of 81,315.20 and VAT of 5,402.48.
 5. Checked the row count, the sums and that nothing was left behind.
 
-**Result:** passed. 5m 44s, 12 steps, $0.03.
+**Result:** passed. 5m 44s, 12 steps, $0.021.
 
 ## COBOL to Python (Terminal-Bench 2.1)
 
@@ -84,7 +84,7 @@ the same.
 4. Ran both versions on the same six inputs and compared the output files.
 5. Tested overflow and edge cases, and ran it again from another folder.
 
-**Result:** passed. Every case matched byte for byte. 4m 20s, 18 steps, $0.03.
+**Result:** passed. Every case matched byte for byte. 4m 20s, 18 steps, $0.028.
 
 ## Robot trajectories in PyDrake (Terminal-Bench 4)
 
@@ -96,7 +96,7 @@ re-run on hidden configs.
 the visible config and two varied configs for schema, gait modes, contact and friction, integration and
 smoothness, and inverse dynamics.
 
-**Result:** passed, including the hidden configs. 33m 45s, 101 steps, $0.44.
+**Result:** passed, including the hidden configs. 33m 45s, 101 steps, $0.198.
 
 ## Leaked secret in git history (Terminal-Bench 2.1)
 
@@ -107,7 +107,7 @@ sure it is gone from the repository.
 secret where asked, purged the commit and every stale reference, and scanned the repository again: the commit
 was absent and the scan was clear.
 
-**Result:** passed. 1m 23s, 9 steps, $0.01.
+**Result:** passed. 1m 23s, 9 steps, $0.005.
 
 ## Lost database records (Terminal-Bench 2.1)
 

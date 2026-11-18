@@ -1,46 +1,45 @@
-# Core
+# Core Agent
 
-**Core is an AI agent that does real work on a computer.** You describe a job in plain words. Core works in a
-Linux sandbox with terminals, files, Python and images until the job is done, checks its own result, and records
-every step, token and second along the way.
+**A lean, cheap agent: over 3× cheaper than Codex.**
 
-It is plain Python with no agent framework underneath, and it runs one model at a time. Every result below is
-from a real run with `gpt-6-luna`.
+[![CI](https://github.com/mohamud1961/core-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/mohamud1961/core-agent/actions/workflows/ci.yml)
 
-- [See it work](#see-it-work): real jobs, with time and cost
-- [Try it in 60 seconds](#try-it-in-60-seconds): runs offline, no API key
-- [How it works](#how-it-works)
-- [How I build it](#how-i-build-it): fast to test, quick to remove
-- [Hard problems solved](#hard-problems-solved)
-- [Limits](#limits)
+Core Agent does real work on a computer. You give it a job in plain words, and it works in a Linux sandbox with
+terminals, files, Python, images and a browser until the job is done. It is plain Python with no agent framework
+underneath, and it records every call, token and second it spends.
 
-## See it work
+- [Core vs Codex](#core-vs-codex)
+- [Try it in 60 seconds](#try-it-in-60-seconds)
+- [Run it on your own task](#run-it-on-your-own-task)
+- [Why it is cheap](#why-it-is-cheap)
+- [Real jobs](#real-jobs)
+- [How it is built](#how-it-is-built)
 
-Five jobs chosen because they look like real client work. Steps and checks for each: [RUNS.md](RUNS.md).
+## Core vs Codex
 
-| Job | What Core did | Time | Cost |
-|---|---|---|---|
-| **Bank capital calculation** | Recalculated counterparty credit risk capital for two trading counterparties under the EU banking rules (SA-CCR, CRR3): 13 trades, a collateral agreement and disputed margin calls. Wrote a results file and a formula-driven Excel workbook, then checked both. | 17m 15s | $0.18 |
-| **Design file from a picture** | Given a finished graphic and its image pieces, worked out the position, size, layering and text styling of every element and wrote them as a layout config. Rendered the config back: pixel-identical to the original. | 26m 42s | $0.19 |
-| **3D part from an engineering drawing** | Read the dimensions off a technical drawing, zooming into each view, then wrote a FreeCAD script that builds the part as a proper parametric model. Reopened the file and checked it is one valid solid. | 12m 34s | $0.11 |
-| **Invoices from a folder of scans** | Read 17 mixed documents (PDFs and phone photos) with OCR, sorted out the 10 invoices, and wrote a summary of totals and VAT. Checked every sum before finishing. | 5m 44s | $0.03 |
-| **COBOL to Python** | Read an old COBOL program, ran it, rewrote it in Python, then ran both on the same inputs until every output matched byte for byte. | 4m 20s | $0.03 |
+Terminal-Bench 2.1, the 24 tasks both agents ran, graded by the benchmark's hidden tests. Codex is the public
+leaderboard entry "Codex / GPT-5.6 Luna, effort max". Core runs gpt-6-luna. Every run is priced at gpt-6-luna list
+prices ($0.10 / $0.01 / $0.50 per million uncached input / cached input / output tokens), so the gap is the
+harness, not the model's price.
 
-Also in [RUNS.md](RUNS.md): a walking, jumping and running robot trajectory generator in PyDrake (33m 45s,
-$0.44), a leaked secret recovered from git history and then purged (1m 23s, $0.01), and a corrupted database
-recovered with all 11 records (48s, $0.005).
+| | Core Agent | Codex |
+|---|---|---|
+| **Cost per solved task** | **$0.013** | $0.044 |
+| Cost per run | $0.010 | $0.033 |
+| Tokens per run (median) | **95K** | 503K |
+| Pass rate | 73% (238 of 325 runs) | 76% (91 of 120 runs) |
 
-These jobs come from Terminal-Bench, a public set of realistic computer tasks graded by hidden tests; the first
-three are from version 4, the hardest set. Core does not solve the hardest tasks every time. These are chosen
-successful runs, not success rates. Cost is model usage priced at
-$0.25 / $0.025 / $0.90 per million input / cached / output tokens.
+Core spends **3.3× less per solved task** and about **5× fewer tokens per run**, at a similar pass rate. At the
+price each model actually charges, Codex's leaderboard run costs about 35× more per solved task.
+
+Per task results and the script that computes them: [benchmarks/](benchmarks/).
 
 ## Try it in 60 seconds
 
 Needs Python 3.12+ and [uv](https://docs.astral.sh/uv/).
 
 ```sh
-cd core
+git clone https://github.com/mohamud1961/core-agent && cd core-agent
 uv sync --frozen
 uv run python examples/offline_smoke.py
 ```
@@ -52,15 +51,58 @@ writes a file through Core's real tools and prints:
 {"status": "finished", "actual_file": "hello from installed Aether\n", "network_calls": 0, "attempts": 2}
 ```
 
-Run the tests with `uv run pytest -q -m "not sweep"`. Linux-only tests (PTY, Docker, process cleanup) skip on
-macOS. The exhaustive kill-point sweeps take tens of minutes on Linux; run them with `uv run pytest -m sweep`.
+Tests: `uv run pytest -q -m "not sweep"`. Linux-only tests (PTY, Docker, process cleanup) skip on macOS.
 
-**With a real model:** Core talks to any OpenAI-compatible endpoint through
-[provider.py](src/aether/core/provider.py). For full task runs it plugs into
-[Harbor](https://github.com/laude-institute/harbor): install the `harbor` extra and select
+## Run it on your own task
+
+Core works inside a running Docker container. Point it at any OpenAI-compatible or Azure OpenAI endpoint:
+
+```sh
+export AETHER_FW_GLM_53_FLASH_ENDPOINT=https://your-endpoint
+export AETHER_FW_GLM_53_FLASH_KEY=your-key
+export AETHER_FW_GLM_53_FLASH_DEPLOYMENT=gpt-6-luna
+export AETHER_CORE_API=openai          # or azure (the default)
+
+docker run -d --name job python:3.12 sleep infinity
+echo "Write a CSV of the 10 largest files under /usr with their sizes." > task.txt
+uv run python -m aether.core.local_run --container job --task-file task.txt --logs logs/
+```
+
+`logs/` then holds the full record: every model call, tool call, token count and timing. For benchmark runs Core
+plugs into [Harbor](https://github.com/laude-institute/harbor): install the `harbor` extra and select
 `aether.core.harbor_agent:AetherCoreAgent`.
 
-## How it works
+## Why it is cheap
+
+- **Cache-stable context.** The start of every request stays identical, so the provider's cache serves most of
+  it at a tenth of the price. This alone roughly halved cost per run.
+- **Small requests.** Core keeps the working context within a budget instead of replaying the whole history, so
+  a typical run reads 95K tokens where Codex reads 503K.
+- **State written once.** Facts about the run are written once instead of rewritten every turn. This cut cost per
+  run to 0.52× and 0.76× on two task sets, with the same passes.
+- **Long commands keep running.** Up to eight named terminals keep slow jobs going in the background while the
+  model works on something else.
+
+Each of these started as an experiment behind a switch and stayed only because the numbers held. The record:
+[EXPERIMENTS.md](EXPERIMENTS.md).
+
+## Real jobs
+
+Real runs on Terminal-Bench, graded by hidden tests Core never saw. Costs at gpt-6-luna list prices.
+
+| Job | Time | Cost |
+|---|---|---|
+| **Bank capital calculation** under EU rules (SA-CCR, CRR3): 13 trades, a collateral agreement, disputed margin calls, results file and a formula-driven Excel workbook | 17m 15s | $0.085 |
+| **Design file from a picture**: every element's position, size, layering and text style, rendered back pixel-identical | 26m 42s | $0.085 |
+| **3D part from an engineering drawing**: a parametric FreeCAD model built from dimensions read off a PNG | 12m 34s | $0.051 |
+| **Robot trajectories in PyDrake**: walking, jumping and running for a simulated biped, obeying contact physics | 33m 45s | $0.198 |
+| **Invoices from a folder of scans**: 17 mixed documents read with OCR, 10 invoices sorted out, totals and VAT | 5m 44s | $0.021 |
+| **COBOL to Python**: rewritten and checked byte for byte against the original on the same inputs | 4m 20s | $0.028 |
+
+Steps and checks for each, plus two more: [RUNS.md](RUNS.md). These are chosen successful runs; the hardest tasks
+are not solved every time.
+
+## How it is built
 
 ```mermaid
 flowchart LR
@@ -72,69 +114,40 @@ flowchart LR
     L --> R[Record: every call,<br/>token and second]
 ```
 
-The model decides what to do and when the job is finished. Core runs the actions, tells the model exactly what
-happened, keeps the context within budget, and records everything. It never decides the task for the model.
+The model decides what to do and when the job is finished. Core runs the actions, reports exactly what happened,
+keeps the context within budget, and records everything.
 
 | Part | What it does | Where |
 |---|---|---|
 | Loop | Calls the model, runs its tool calls in order, enforces the deadline | [loop.py](src/aether/core/loop.py) |
-| Terminals | Up to eight named shells that survive long commands, so a slow job keeps running while the model works | [terminal.py](src/aether/core/terminal.py) |
-| Files | Line-numbered reads, exact edits, atomic writes that never leave a half-written file | [files.py](src/aether/core/files.py) |
+| Terminals | Up to eight named shells that survive long commands | [terminal.py](src/aether/core/terminal.py) |
+| Files | Line-numbered reads, exact edits, atomic writes | [files.py](src/aether/core/files.py) |
 | Python, images, browser | A persistent Python session, image viewing and cropping, a headless browser | [repl.py](src/aether/core/repl.py), [images.py](src/aether/core/images.py), [browser.py](src/aether/core/browser.py) |
-| Context | Keeps long runs inside the model's budget, with a stable request prefix so the provider's cache stays warm | [context.py](src/aether/core/context.py), [clm.py](src/aether/core/clm.py) |
+| Context | Keeps long runs inside budget, with a cache-stable request prefix | [context.py](src/aether/core/context.py), [clm.py](src/aether/core/clm.py) |
 | Provider | Streaming calls, bounded retries, honest handling of dropped streams | [provider.py](src/aether/core/provider.py) |
-| Record | Every model attempt logged before it is sent, with exact arguments, tokens and timing | [calls.py](src/aether/core/calls.py) |
-| MCP | Connects to external tool servers over the Model Context Protocol | [mcp.py](src/aether/core/mcp.py) |
+| Record | Every model attempt logged before it is sent | [calls.py](src/aether/core/calls.py) |
+| MCP | Connects to external tool servers | [mcp.py](src/aether/core/mcp.py) |
 
-About 23,000 lines of Python in 120 modules, each under 500 lines, with 174 test files. Design notes:
+About 23,000 lines of Python in 120 modules, each under 500 lines, with 174 test files. Tested in a plain Linux
+container on every push.
+
+**Built for production failures, not just demos.** A dead tool server no longer freezes later calls, a lost
+reply can no longer run a command twice, and writes can no longer land at the wrong path. Each fix came from a
+real run and has a test that fails without it: [docs/LESSONS.md](docs/LESSONS.md).
+
+How changes are made and judged: [BUILDING.md](BUILDING.md). Design notes:
 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-## How I build it
+## Limits
 
-Every change starts as a small experiment behind a switch. It runs on real tasks and is kept only if the numbers
-say so. Most ideas are settled within a day, on a few dollars of runs.
-
-Two that earned their place:
-
-- **Cache-stable context:** keeping the start of every request identical roughly halved cost per run, with the
-  same success rate.
-- **Stable facts:** writing the run's state once instead of rewriting it every turn cut cost to 0.52x and 0.76x
-  on two separate task sets, with the same passes. Now on by default.
-
-The method with real examples: [BUILDING.md](BUILDING.md). What was tried, kept and removed:
-[EXPERIMENTS.md](EXPERIMENTS.md).
-
-## Hard problems solved
-
-Agents usually fail in production for boring reasons. These came from real runs and testing and were fixed at the root, each
-with a test that fails without the fix.
-
-- **A dead tool server froze every later call.** When an MCP server process died, later calls waited out their
-  full timeout. Core now checks the server is alive while waiting and recovers the requests it never answered.
-- **A lost reply could run a command twice.** If the reply to a terminal command was lost, a retry could run it
-  again. In-flight commands are now fenced, and a lost reply is resolved from the terminal's own records.
-- **Files written to the wrong place.** A plain `mv` onto a path that became a folder mid-write reports success at
-  the wrong location. Writes now commit the exact path with rename semantics.
-- **Long reasoning cut off and lost.** A model turn cut by the output limit was being dropped. It is now kept,
-  and the cut is shown to the model.
-
-More, with the evidence: [docs/LESSONS.md](docs/LESSONS.md).
+- One model at a time, tested mainly with `gpt-6-luna`.
+- Core's comparison runs come from many experiment builds, and some tasks have only 2 runs. Codex has 5 per task.
+- The offline tests prove the mechanics, not task skill. Task results come from the real runs above.
 
 ## Built with
 
 Python 3.12, the OpenAI SDK, asyncio, Docker, Harbor, Playwright, MCP and Pillow. Ideas adapted from public agents
 are credited in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-## Limits
-
-- One model at a time, tested mainly with `gpt-6-luna`.
-- The hardest tasks are not solved every time. The runs above are chosen examples.
-- Built for Linux sandboxes. Some features skip on macOS.
-- The offline tests prove the mechanics work, not how good the model is at a task. Task-level results come from
-  real runs, kept in the research record.
-
-## More
-
-Core comes out of a research programme on what an agent harness should add to a model. That work, including the
-experiments behind each decision, is in [../research/](../research/). The overview is on the
-[front page](../README.md).
+Core Agent comes out of [Aether](https://github.com/mohamud1961/Aether), a research programme on what an agent
+harness should add to a model.

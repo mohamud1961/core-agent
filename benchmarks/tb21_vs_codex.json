@@ -1,0 +1,362 @@
+{
+ "price_per_million": {
+  "uncached_input": 0.1,
+  "cached_input": 0.01,
+  "output": 0.5
+ },
+ "tasks": 24,
+ "core": {
+  "runs": 325,
+  "passes": 238,
+  "pass_rate": 0.732,
+  "usd_per_run": 0.0096,
+  "usd_per_pass": 0.0132,
+  "median_tokens_per_run": 95372
+ },
+ "codex": {
+  "runs": 120,
+  "passes": 91,
+  "pass_rate": 0.758,
+  "usd_per_run": 0.0334,
+  "usd_per_pass": 0.0441,
+  "median_tokens_per_run": 502779
+ },
+ "per_task": {
+  "build-cython-ext": {
+   "core": {
+    "runs": 2,
+    "passes": 2,
+    "usd_per_run": 0.0243,
+    "median_minutes": 6.9
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 5,
+    "usd_per_run": 0.05,
+    "median_minutes": 4.9
+   }
+  },
+  "chess-best-move": {
+   "core": {
+    "runs": 31,
+    "passes": 17,
+    "usd_per_run": 0.0054,
+    "median_minutes": 2.8
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 2,
+    "usd_per_run": 0.0115,
+    "median_minutes": 1.0
+   }
+  },
+  "cobol-modernization": {
+   "core": {
+    "runs": 2,
+    "passes": 2,
+    "usd_per_run": 0.0164,
+    "median_minutes": 3.9
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 5,
+    "usd_per_run": 0.0238,
+    "median_minutes": 3.6
+   }
+  },
+  "code-from-image": {
+   "core": {
+    "runs": 7,
+    "passes": 7,
+    "usd_per_run": 0.0033,
+    "median_minutes": 0.4
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 5,
+    "usd_per_run": 0.0033,
+    "median_minutes": 0.3
+   }
+  },
+  "configure-git-webserver": {
+   "core": {
+    "runs": 14,
+    "passes": 4,
+    "usd_per_run": 0.0168,
+    "median_minutes": 4.3
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 4,
+    "usd_per_run": 0.0281,
+    "median_minutes": 3.3
+   }
+  },
+  "filter-js-from-html": {
+   "core": {
+    "runs": 1,
+    "passes": 0,
+    "usd_per_run": 0.0196,
+    "median_minutes": 5.1
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 0,
+    "usd_per_run": 0.048,
+    "median_minutes": 5.7
+   }
+  },
+  "fix-git": {
+   "core": {
+    "runs": 16,
+    "passes": 16,
+    "usd_per_run": 0.0037,
+    "median_minutes": 1.2
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 5,
+    "usd_per_run": 0.0085,
+    "median_minutes": 2.1
+   }
+  },
+  "gcode-to-text": {
+   "core": {
+    "runs": 30,
+    "passes": 1,
+    "usd_per_run": 0.028,
+    "median_minutes": 4.7
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 0,
+    "usd_per_run": 0.0942,
+    "median_minutes": 7.0
+   }
+  },
+  "git-leak-recovery": {
+   "core": {
+    "runs": 14,
+    "passes": 14,
+    "usd_per_run": 0.0035,
+    "median_minutes": 1.1
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 5,
+    "usd_per_run": 0.0048,
+    "median_minutes": 0.7
+   }
+  },
+  "git-multibranch": {
+   "core": {
+    "runs": 14,
+    "passes": 13,
+    "usd_per_run": 0.0093,
+    "median_minutes": 2.7
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 5,
+    "usd_per_run": 0.0171,
+    "median_minutes": 2.1
+   }
+  },
+  "make-doom-for-mips": {
+   "core": {
+    "runs": 1,
+    "passes": 0,
+    "usd_per_run": 0.0538,
+    "median_minutes": 12.8
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 0,
+    "usd_per_run": 0.2883,
+    "median_minutes": 11.7
+   }
+  },
+  "merge-diff-arc-agi-task": {
+   "core": {
+    "runs": 24,
+    "passes": 24,
+    "usd_per_run": 0.0065,
+    "median_minutes": 2.0
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 5,
+    "usd_per_run": 0.0126,
+    "median_minutes": 1.4
+   }
+  },
+  "model-extraction-relu-logits": {
+   "core": {
+    "runs": 23,
+    "passes": 9,
+    "usd_per_run": 0.0199,
+    "median_minutes": 4.7
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 3,
+    "usd_per_run": 0.0241,
+    "median_minutes": 3.4
+   }
+  },
+  "modernize-scientific-stack": {
+   "core": {
+    "runs": 2,
+    "passes": 2,
+    "usd_per_run": 0.0017,
+    "median_minutes": 0.6
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 5,
+    "usd_per_run": 0.0035,
+    "median_minutes": 0.6
+   }
+  },
+  "multi-source-data-merger": {
+   "core": {
+    "runs": 33,
+    "passes": 33,
+    "usd_per_run": 0.0024,
+    "median_minutes": 0.8
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 5,
+    "usd_per_run": 0.006,
+    "median_minutes": 0.9
+   }
+  },
+  "nginx-request-logging": {
+   "core": {
+    "runs": 14,
+    "passes": 14,
+    "usd_per_run": 0.0025,
+    "median_minutes": 1.0
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 5,
+    "usd_per_run": 0.0058,
+    "median_minutes": 0.8
+   }
+  },
+  "pytorch-model-recovery": {
+   "core": {
+    "runs": 22,
+    "passes": 22,
+    "usd_per_run": 0.0055,
+    "median_minutes": 1.5
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 5,
+    "usd_per_run": 0.0159,
+    "median_minutes": 2.3
+   }
+  },
+  "qemu-alpine-ssh": {
+   "core": {
+    "runs": 2,
+    "passes": 0,
+    "usd_per_run": 0.0113,
+    "median_minutes": 5.3
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 0,
+    "usd_per_run": 0.0429,
+    "median_minutes": 7.9
+   }
+  },
+  "sanitize-git-repo": {
+   "core": {
+    "runs": 14,
+    "passes": 1,
+    "usd_per_run": 0.0213,
+    "median_minutes": 6.9
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 3,
+    "usd_per_run": 0.041,
+    "median_minutes": 4.5
+   }
+  },
+  "sparql-university": {
+   "core": {
+    "runs": 27,
+    "passes": 25,
+    "usd_per_run": 0.0045,
+    "median_minutes": 1.1
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 5,
+    "usd_per_run": 0.0075,
+    "median_minutes": 0.9
+   }
+  },
+  "sqlite-with-gcov": {
+   "core": {
+    "runs": 2,
+    "passes": 2,
+    "usd_per_run": 0.0054,
+    "median_minutes": 3.0
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 4,
+    "usd_per_run": 0.0167,
+    "median_minutes": 2.1
+   }
+  },
+  "tune-mjcf": {
+   "core": {
+    "runs": 26,
+    "passes": 26,
+    "usd_per_run": 0.0053,
+    "median_minutes": 3.8
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 5,
+    "usd_per_run": 0.0186,
+    "median_minutes": 4.7
+   }
+  },
+  "vulnerable-secret": {
+   "core": {
+    "runs": 2,
+    "passes": 2,
+    "usd_per_run": 0.0023,
+    "median_minutes": 1.1
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 5,
+    "usd_per_run": 0.0048,
+    "median_minutes": 0.5
+   }
+  },
+  "write-compressor": {
+   "core": {
+    "runs": 2,
+    "passes": 2,
+    "usd_per_run": 0.0139,
+    "median_minutes": 3.5
+   },
+   "codex": {
+    "runs": 5,
+    "passes": 5,
+    "usd_per_run": 0.0259,
+    "median_minutes": 3.3
+   }
+  }
+ }
+}
